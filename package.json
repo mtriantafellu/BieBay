@@ -1,0 +1,22 @@
+{
+  "name": "biebayinit",
+  "version": "1.0.0",
+  "description": "Week 7 Homework Monday",
+  "main": "bieBayCustomer.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mtriantafellu/BieBay.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mtriantafellu/BieBay/issues"
+  },
+  "homepage": "https://github.com/mtriantafellu/BieBay#readme",
+  "dependencies": {
+    "inquirer": "^3.1.1"
+  }
+}
