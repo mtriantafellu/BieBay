@@ -1,6 +1,6 @@
 var fs = require("fs");
 
-var questions = require('./Questions.js');
+//var questions = require('./Questions.js');
 //console.log(questions[0].question);
 
 var inquirer = require('inquirer');
@@ -13,146 +13,69 @@ var answer = '';
 
 var welcome = function() {
 
-    var question = {
+    var welcomeQuestion = {
         type: 'list',
         name: 'welcome',
-        message: 'Welcome to the FlashCard App, would you like to begin with Basic Cards?',
-        choices: ['Yes', 'No']
+        message: 'Welcome to BieBay!  Here are a few of the items we sell:',
+        choices: ['View Items', 'Buy Items']
     }
 
-    inquirer.prompt(question).then(function (answers) {
-        if (answers.welcome === 'Yes') {
-            console.log('Yes');
-            basic();
+    inquirer.prompt(welcomeQuestion).then(function (answers) {
+        if (answers.welcome === 'View Items') {
+            console.log('View Items');
+            viewItems();
         } else {
-            console.log('OK - Try the Cloze Cards!');
-
+            console.log('Buy Items');
+            buyItems();
         }
     });
 }
 
-//BASIC FUNCTION
-var basic = function() {
+//ITEMS FUNCTION
+var viewItems = function() {
 
-    var question = {
+    var item = {
         type: 'list',
-        name: 'basic',
-        message: 'Which side would you like to view?',
-        choices: ['Front', 'Back']
+        name: 'item',
+        message: 'Here is what Item1 contains: ',
+        choices: ['Item1', 'Item2', 'Item3', 'Item4']
     }
 
-    inquirer.prompt(question).then(function (answers) {
+    inquirer.prompt(item).then(function (answers) {
 
-        if (answers.basic === 'Front') {
-            generateQuestion();
-
-        } else {
-            showAnswer();
+        if (answers.item === 'Item1') {
+            itemGenerator();
+        } else if (answers.item === 'Item2') {
+            itemGenerator();
+        } else if (answers.item === 'Item3') {
+            itemGenerator();
+        } else if (answers.item === 'Item4') {
+            itemGenerator();
         }
     });
 }
 
-function generateQuestion() {
-    fs.readFile('./Questions.js', 'utf8', function(error, data) {
+//BUY ITEMS
+var buyItems = function() {
 
-
-        if (error) {
-            console.log(error);
-        } else {
-            genQuestion = console.log(questions[0].question);
-            userInput();
-        }
-    })
-
-}
-
-function generateAnswer() {
-    fs.readFile('./Questions.js', 'utf8', function(error, data) {
-
-        if (error) {
-            console.log(error);
-        } else {
-            genAnswer = questions[0].answer;
-        }
-    })
-}
-
-function showAnswer() {
-    fs.readFile('./Questions.js', 'utf8', function(error, data) {
-
-        if (error) {
-            console.log(error);
-        } else {
-            genAnswer = questions[0].answer;
-            console.log(genAnswer);
-        }
-    })
-}
-
-function userInput() {
-
-    var input = {
-
-        type: 'input',
-        name: 'answerInput',
-        message: 'Please input your answer (Case Sensitive): '
-    }
-
-    inquirer.prompt(input).then(function(value) {
-        answer = value.answerInput;
-        //console.log('value', value);
-        //console.log('answer', answer);
-        //console.log(answer.answerInput);
-        //console.log(value.answerInput);
-        //generateAnswer();
-        verify();
-    });
-    generateAnswer();
-}
-
-function verify() {
-    //generateAnswer();
-    //console.log('genAnswer', genAnswer);
-    if (answer == genAnswer) {
-        console.log('correct!')
-        anotherQuestion();
-    } else {
-        console.log('incorrect!');
-        tryAgain();
-    }
-}
-
-function anotherQuestion() {
-
-    var another = {
+    var item = {
         type: 'list',
-        name: 'anotherQuestion',
-        message: 'Would you like another question?',
-        choices: ['Yes', 'No']
+        name: 'item',
+        message: 'What item would you like to buy?',
+        choices: ['Item1', 'Item2', 'Item3', 'Item4']
     }
-    inquirer.prompt(another).then(function(answers) {
-        if (answers.anotherQuestion === 'Yes') {
-            console.log('OK! Another question!');
-        } else {
-            console.log('OK! Cya!');
-        }
-    });
-}
 
-function tryAgain() {
+    inquirer.prompt(item).then(function (answers) {
 
-    var again = {
-        type: 'list',
-        name: 'tryAgain',
-        message: 'Would you like to Try Again?',
-        choices: ['Yes', 'No']
-    }
-    inquirer.prompt(again).then(function(answers) {
-        if (answers.tryAgain === 'Yes') {
-            console.log('OK! Try Again!');
-            userInput();
-        } else {
-            console.log('OK! Dont Try Again!');
+        if (answers.item === 'Item1') {
+            itemGenerator();
+
+        } else if (answers.item === 'Item2') {
+            itemGenerator();
+        } else if (answers.item === 'Item3') {
+            itemGenerator();
+        } else if (answers.item === 'Item4') {
+            itemGenerator();
         }
     });
 }
