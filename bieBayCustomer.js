@@ -1,15 +1,27 @@
-var fs = require("fs");
 
-//var questions = require('./Questions.js');
-//console.log(questions[0].question);
+var mysql = require("mysql");
 
 var inquirer = require('inquirer');
 
-//three arguments 1. which side, 2. userInput, 3. AnotherQuestion?
+var fs = require("fs");
 
-var genQuestion = '';
-var genAnswer = '';
-var answer = '';
+var connection = mysql.createConnection({
+    host: "localhost",
+    port: 3306,
+
+    // Your username
+    user: "root",
+
+    // Your password
+    password: "root",
+    database: "bieBay"
+});
+
+connection.connect(function(err) {
+    if (err) throw err;
+    // run the start function after the connection is made to prompt the user
+    welcome();
+});
 
 var welcome = function() {
 
@@ -31,29 +43,48 @@ var welcome = function() {
     });
 }
 
-//ITEMS FUNCTION
+// viewItems FUNCTION
 var viewItems = function() {
 
-    var item = {
-        type: 'list',
-        name: 'item',
-        message: 'Here is what Item1 contains: ',
-        choices: ['Item1', 'Item2', 'Item3', 'Item4']
-    }
+    connection.query('SELECT * FROM `products`', function(err, results) {
+        if (err) throw err;
 
-    inquirer.prompt(item).then(function (answers) {
+        inquirer.prompt ([
+            {
+                name: "choice",
+                type: "list",
+                message: "Which item would you like?",
+                choices: function () {
 
-        if (answers.item === 'Item1') {
-            itemGenerator();
-        } else if (answers.item === 'Item2') {
-            itemGenerator();
-        } else if (answers.item === 'Item3') {
-            itemGenerator();
-        } else if (answers.item === 'Item4') {
-            itemGenerator();
-        }
-    });
-}
+                    choiceArray = [];
+
+                    for (var i = 0; i < results.length; i++) {
+                        choiceArray.push("ITEM ID: " + results[i].id + " | " + results[i].item_id + " | Item Name: " + results[i].product_name + " | Prce: $" + results[i].price);
+                    }
+                        return choiceArray;
+                        //choose();
+                },
+                message: "Would you like to buy an item?  Please select which item below: "
+            },
+
+            ]) //end inquirer.prompt
+
+            .then(function(answers) {
+
+                var chosenItem;
+
+                for (var i = 0; i < results.length; i++) {
+
+                    if (results[i].id == answers.choice[9]) {
+                        chosenItem = results[i];
+                        console.log("You picked: " + results[i].item_id + " I.E.: " + results[i].product_name);
+                        console.log("That will be: $" +  results[i].price + ".00 USD");
+                    }
+                }
+            }) // end .then
+
+    }) // end connection.query
+}; // end viewItems function
 
 //BUY ITEMS
 var buyItems = function() {
@@ -79,5 +110,3 @@ var buyItems = function() {
         }
     });
 }
-
-welcome();

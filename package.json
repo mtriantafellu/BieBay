@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/mtriantafellu/BieBay#readme",
   "dependencies": {
-    "inquirer": "^3.1.1"
+    "inquirer": "^3.1.1",
+    "require": "^2.4.20"
   }
 }
