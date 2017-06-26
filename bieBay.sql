@@ -15,10 +15,14 @@ DESCRIBE `products`;
 # INSERT INTO `products`
 # (`item_id`) VALUES ('Toothpaste');
 
-# UPDATE `products` SET `item_id` = '<insertHere>' WHERE id = '1';
+UPDATE `products` SET `stock_quantity` = '134' WHERE id = '1';
+UPDATE `products` SET `stock_quantity` = '182' WHERE id = '2';
+UPDATE `products` SET `stock_quantity` = '42' WHERE id = '3';
+UPDATE `products` SET `stock_quantity` = '98' WHERE id = '4';
+UPDATE `products` SET `stock_quantity` = '253' WHERE id = '5';
 
 SELECT * FROM `products`;
  
-DELETE FROM `products`
-	WHERE id = '6';
+#DELETE FROM `products`
+#	WHERE id = '6';
 

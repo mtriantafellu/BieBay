@@ -28,17 +28,16 @@ var welcome = function() {
     var welcomeQuestion = {
         type: 'list',
         name: 'welcome',
-        message: 'Welcome to BieBay!  Here are a few of the items we sell:',
-        choices: ['View Items', 'Buy Items']
+        message: 'Welcome to BieBay!  Would you like to view our items for sale?',
+        choices: ['Yes', 'No']
     }
 
     inquirer.prompt(welcomeQuestion).then(function (answers) {
-        if (answers.welcome === 'View Items') {
+        if (answers.welcome === 'Yes') {
             console.log('View Items');
             viewItems();
         } else {
-            console.log('Buy Items');
-            buyItems();
+            console.log('Ok - Please come again!');
         }
     });
 }
@@ -63,10 +62,8 @@ var viewItems = function() {
 
                     choiceArray = [];
 
-                    console.log(choiceArray);
-
                     for (var i = 0; i < results.length; i++) {
-                        choiceArray.push("ITEM ID: " + results[i].id + " | " + results[i].item_id + " | Item Name: " + results[i].product_name + " | Prce: $" + results[i].price);
+                        choiceArray.push("ITEM ID: " + results[i].id + " | " + results[i].item_id + " | Item Name: " + results[i].product_name + " | Prce: $" + results[i].price + " | " + results[i].stock_quantity);
                     }
                         return choiceArray;
                         //choose();
@@ -82,6 +79,7 @@ var viewItems = function() {
 
                     if (results[i].id == answers.choice[9]) {
                         chosenItem = results[i];
+                        chosenId = results[i].id;
 
                         console.log("You picked: " + results[i].item_id + " I.E.: " + results[i].product_name);
                         console.log("That will be: $" + results[i].price + ".00 USD");
@@ -90,53 +88,62 @@ var viewItems = function() {
                 }
             }) // end first .then
 
-                //This function asks how many
-                .then(function(answers) {
+            //This function asks how many
+            .then(function(answers) {
 
-                    var quantityInput = {
-                        name: "quantity",
-                        type: "input",
-                        message: "How many would you like?"
+                var quantityInput = {
+                    name: "quantity",
+                    type: "input",
+                    message: "How many would you like?"
                     }
 
                     inquirer.prompt(quantityInput).then(function(value) {
 
                         quantity = value.quantity;
-                        console.log(quantity);
-                        console.log(chosenItem);
-                        console.log(choiceArray);
-                        //console.log(results[i].stock_quantity);
-                        /*
-                         connection.query(UPDATE `products` SET `stock_quantity` = 'stock_quantity - quantity' WHERE id = 'results[i].id');
+                        quantityLeft = [];
+                        // console.log('quantity', quantity);
+                        // console.log('chosenId', chosenId);
+                        // console.log('chosenItem', chosenItem);
+                        // console.log('chosenItem.stock_quantity', chosenItem.stock_quantity);
 
-                         console.log(results[i].stock_quantity); */
-                    }) // end second quantityInput inquirer
+
+                        if (quantity < chosenItem.stock_quantity) {
+                            console.log("Great!  We have that many in stock!");
+                            connection.query('UPDATE `products` SET `stock_quantity` = `stock_quantity` - ? WHERE id = ?', [quantity, chosenId], function (err, results) {
+                                if (err) {
+                                    throw err;
+                                }
+                                console.log('Thank you for Shopping BieBay!');
+                                quantityLeft.push(chosenItem.stock_quantity);
+                                console.log('quantityLeft:', quantityLeft);
+                                //left();
+                            });
+
+                        }
+                        else
+                            {
+                                console.log("Sorry we don't have enough in stock!");
+                                viewItems();
+                            }
+
+                        }) // end second quantityInput inquirer
+
                 }) // end second .then
 
         }) // end connection.query
+
+    var left = function() {
+        var quantityLeft = {
+            name: "quantity",
+            type: "input",
+            message: "Here\s how many we have left:" + chosenItem.stock_quantity
+        }
+
+        inquirer.prompt(quantityLeft).then(function (value) {
+            console.log(chosenItem.stock_quantity);
+        }) // end inquirer
+
+    } // end left
 }; // end viewItems function
 
-//BUY ITEMS
-var buyItems = function() {
 
-    var item = {
-        type: 'list',
-        name: 'item',
-        message: 'What item would you like to buy?',
-        choices: ['Item1', 'Item2', 'Item3', 'Item4']
-    }
-
-    inquirer.prompt(item).then(function (answers) {
-
-        if (answers.item === 'Item1') {
-            itemGenerator();
-
-        } else if (answers.item === 'Item2') {
-            itemGenerator();
-        } else if (answers.item === 'Item3') {
-            itemGenerator();
-        } else if (answers.item === 'Item4') {
-            itemGenerator();
-        }
-    });
-}
