@@ -63,7 +63,7 @@ var viewItems = function() {
                     choiceArray = [];
 
                     for (var i = 0; i < results.length; i++) {
-                        choiceArray.push("ITEM ID: " + results[i].id + " | " + results[i].item_id + " | Item Name: " + results[i].product_name + " | Prce: $" + results[i].price + " | " + results[i].stock_quantity);
+                        choiceArray.push("ITEM ID: " + results[i].id + " | " + results[i].item_id + " | Item Name: " + results[i].product_name + " | Price: $" + results[i].price + " | " + "Quantity: " + results[i].stock_quantity);
                     }
                         return choiceArray;
                         //choose();
