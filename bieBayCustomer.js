@@ -46,6 +46,11 @@ var welcome = function() {
 // viewItems FUNCTION
 var viewItems = function() {
 
+    var quantity;
+    var chosenItem;
+    var chosenId;
+    var choiceArray;
+
     connection.query('SELECT * FROM `products`', function(err, results) {
         if (err) throw err;
 
@@ -57,6 +62,8 @@ var viewItems = function() {
                 choices: function () {
 
                     choiceArray = [];
+
+                    console.log(choiceArray);
 
                     for (var i = 0; i < results.length; i++) {
                         choiceArray.push("ITEM ID: " + results[i].id + " | " + results[i].item_id + " | Item Name: " + results[i].product_name + " | Prce: $" + results[i].price);
@@ -71,19 +78,42 @@ var viewItems = function() {
 
             .then(function(answers) {
 
-                var chosenItem;
-
                 for (var i = 0; i < results.length; i++) {
 
                     if (results[i].id == answers.choice[9]) {
                         chosenItem = results[i];
+
                         console.log("You picked: " + results[i].item_id + " I.E.: " + results[i].product_name);
-                        console.log("That will be: $" +  results[i].price + ".00 USD");
+                        console.log("That will be: $" + results[i].price + ".00 USD");
+                        console.log("There are currently " + results[i].stock_quantity + " in stock.");
                     }
                 }
-            }) // end .then
+            }) // end first .then
 
-    }) // end connection.query
+                //This function asks how many
+                .then(function(answers) {
+
+                    var quantityInput = {
+                        name: "quantity",
+                        type: "input",
+                        message: "How many would you like?"
+                    }
+
+                    inquirer.prompt(quantityInput).then(function(value) {
+
+                        quantity = value.quantity;
+                        console.log(quantity);
+                        console.log(chosenItem);
+                        console.log(choiceArray);
+                        //console.log(results[i].stock_quantity);
+                        /*
+                         connection.query(UPDATE `products` SET `stock_quantity` = 'stock_quantity - quantity' WHERE id = 'results[i].id');
+
+                         console.log(results[i].stock_quantity); */
+                    }) // end second quantityInput inquirer
+                }) // end second .then
+
+        }) // end connection.query
 }; // end viewItems function
 
 //BUY ITEMS
